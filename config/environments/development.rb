@@ -55,7 +55,6 @@ Rails.application.configure do
 
   # Ensure assets are served directly and compiled on the fly
   config.assets.compile = true
-  config.assets.digest = false
   config.assets.debug = true
   
   # Raises error for missing translations.
