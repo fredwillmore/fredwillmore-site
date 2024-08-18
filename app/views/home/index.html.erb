@@ -64,7 +64,7 @@
           <div class="alert alert-danger" role="alert">
             <div>Issues/Todos:</div>
             <% @git_issues.each do |issue| %>
-              <%= link_to issue['title'], issue['url'], target: :blank %>
+              <div><%= link_to issue['title'], issue['url'], target: :blank %></div>
             <% end %>
           </div>
         </div>
