@@ -1,21 +1,74 @@
-
 <div class="container">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 mt-3">
       Hello and welcome to fredwillmore.com. I am using this site to augment my resume with links to personal projects created with Ruby on Rails!
     </div>
   </div>
   <div class="row">
     <div class="col-12">
-      <%= link_to "Climate Control", 'https://climate-control.fredwillmore.com', target: :blank %>
-      <br>
-      <%= link_to 'https://github.com/fredwillmore/climate-control', target: :blank %>
-      <br>
-      This project makes use of some playlist data I gathered when I DJed at the
-      <%= link_to "Basement Pub", 'https://www.instagram.com/basementpub/?hl=en ', target: :blank %>
-      in Portland, OR back in 2003.
-      I have used Rails 7 with Hotwire/Stimulus to provide an interface for exploring the data, along with supplemental data from Spotify and other remote APIs.
-      The matching with Spotify track and artist data is not perfect, but you get the idea.
+      <div class="card">
+        <div class="card-header card-title">
+          Climate Control
+            -
+          <%= link_to 'view project', 'https://climate-control.fredwillmore.com', target: :blank %>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info">
+            <p>
+              This project makes use of playlist data I gathered while DJing at the
+              <%= link_to "Basement Pub", 'https://www.instagram.com/basementpub/?hl=en ', target: :blank %>
+              in Portland, OR back in 2003.
+            </p>
+            <p>
+              I have used Rails 7 with Hotwire/Stimulus to provide an interface for exploring the data, along with supplemental data from Spotify and other remote APIs.
+              The matching with Spotify track and artist data is not perfect, but you get the idea.
+            </p>
+          </div>
+          <div class="card-subtitle">
+            Git Info
+            -
+            <%= link_to 'view project in Github', 'https://github.com/fredwillmore/climate-control', target: :blank %>
+          </div>
+          <div class="alert alert-warning" role="alert">
+            <div>Recent Commits:</div>
+
+            <% @git_history.each do |commit| %>
+              <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                  let linkId = 'tooltip-link-<%= commit['oid'] %>'
+                  let contentId = 'tooltip-content-<%= commit['oid'] %>'
+                  // Initialize the tooltip with the content from the hidden div
+                  new bootstrap.Tooltip(
+                    document.getElementById(linkId),
+                    {
+                      title: document.getElementById(contentId).innerHTML,
+                      html: true,
+                      placement: 'auto' // You can adjust the placement as needed
+                    }
+                  );
+                });
+              </script>
+
+              <!-- Hidden div with the tooltip content -->
+              <div id="tooltip-content-<%= commit['oid'] %>" style="display:none;">
+                <div>additions: <%= commit['additions'] %></div>
+                <div>deletions: <%= commit['deletions'] %></div>
+                <div>changedFiles: <%= commit['changedFiles'] %></div>
+              </div>
+
+              <!-- Element that triggers the tooltip -->
+              <div><%= link_to commit['message'], commit['url'], target: :blank, id: "tooltip-link-#{ commit['oid'] }", dataBsToggle: "tooltip" %></div>
+            <% end %>
+          </div>
+
+          <div class="alert alert-danger" role="alert">
+            <div>Issues/Todos:</div>
+            <% @git_issues.each do |issue| %>
+              <%= link_to issue['title'], issue['url'], target: :blank %>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
