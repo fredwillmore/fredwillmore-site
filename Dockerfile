@@ -21,7 +21,7 @@ FROM base AS app
 COPY . .
 
 # Precompile assets (if needed) and set up other steps
-# RUN bundle exec rake assets:precompile
+RUN bundle exec rake assets:precompile
 # RUN bundle exec rake db:migrate
 # RUN bundle exec rails runner db/seeds/artists.rb
 # RUN bundle exec rails runner db/seeds/tracks.rb
