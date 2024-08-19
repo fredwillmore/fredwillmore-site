@@ -17,11 +17,17 @@ class HomeController < ApplicationController
   end
 
   def git_issues
-    git_api_response['data']['repository']['issues']['nodes']
+    {
+      climatecontrol: git_api_response.dig('data', 'climatecontrol', 'issues', 'nodes') || [],
+      billboardreact: git_api_response.dig('data', 'billboardreact', 'issues', 'nodes') || []
+    }
   end
 
   def git_history
-    git_api_response['data']['repository']['commits']['history']['nodes']
+    {
+      climatecontrol: git_api_response.dig('data', 'climatecontrol', 'commits', 'history', 'nodes') || [],
+      billboardreact: git_api_response.dig('data', 'billboardreact', 'commits', 'history', 'nodes') || []
+    }
   end
 
   def git_api_response
@@ -32,14 +38,40 @@ class HomeController < ApplicationController
 
     query = <<-GRAPHQL
       {
-        repository(owner: "#{owner}", name: "#{name}") {
+        climatecontrol: repository(owner: "#{owner}", name: "climate-control") {
           issues(first: 10) {
             nodes {
+              id
               title
+              bodyText
               url
             }
           }
           commits: object(expression: "master") {
+            ... on Commit {
+              history(first: 10) {
+                nodes {
+                  message
+                  additions
+                  deletions
+                  changedFiles
+                  url
+                  oid
+                }
+              }
+            }
+          }
+        }
+        billboardreact: repository(owner: "#{owner}", name: "billboard-react") {
+          issues(first: 10) {
+            nodes {
+              id
+              title
+              bodyText
+              url
+            }
+          }
+          commits: object(expression: "main") {
             ... on Commit {
               history(first: 10) {
                 nodes {
@@ -73,7 +105,7 @@ class HomeController < ApplicationController
     else
       raise StandardError.new "HTTP request failed with status code #{response.code}"
     end
-    
+
     @git_api_response
   end
 end

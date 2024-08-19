@@ -5,7 +5,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-12">
+    <div class="col-6">
       <div class="card">
         <div class="card-header card-title">
           Climate Control
@@ -32,7 +32,7 @@
           <div class="alert alert-warning" role="alert">
             <div>Recent Commits:</div>
 
-            <% @git_history.each do |commit| %>
+            <% @git_history[:climatecontrol].each do |commit| %>
               <script>
                 document.addEventListener('DOMContentLoaded', function () {
                   let linkId = 'tooltip-link-<%= commit['oid'] %>'
@@ -63,8 +63,114 @@
 
           <div class="alert alert-danger" role="alert">
             <div>Issues/Todos:</div>
-            <% @git_issues.each do |issue| %>
-              <div><%= link_to issue['title'], issue['url'], target: :blank %></div>
+            <% @git_issues[:climatecontrol].each do |issue| %>
+              <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                  let linkId = 'tooltip-link-<%= issue['id'] %>'
+                  let contentId = 'tooltip-content-<%= issue['id'] %>'
+                  // Initialize the tooltip with the content from the hidden div
+                  new bootstrap.Tooltip(
+                    document.getElementById(linkId),
+                    {
+                      title: document.getElementById(contentId).innerHTML,
+                      html: true,
+                      placement: 'auto' // You can adjust the placement as needed
+                    }
+                  );
+                });
+              </script>
+
+              <!-- Hidden div with the tooltip content -->
+              <div id="tooltip-content-<%= issue['id'] %>" style="display:none;">
+                <%= issue['bodyText'] %>
+              </div>
+
+              <!-- Element that triggers the tooltip -->
+              <div><%= link_to issue['title'], issue['url'], target: :blank, id: "tooltip-link-#{ issue['id'] }", dataBsToggle: "tooltip" %></div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header card-title">
+          Billboard Charts
+            -
+          <%= link_to 'view project', 'https://billboard-react.fredwillmore.com', target: :blank %>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info">
+            <p>
+              This project uses Billboard Magazine top 100 data for the years from 1955-2015. Sadly, this data is no longer made available by Billboard, so updates for later years are unlikely.              
+            </p>
+            <p>
+              I used ReactJS with the D3 visualization library.
+            </p>
+          </div>
+          <div class="card-subtitle">
+            Git Info
+            -
+            <%= link_to 'view project in Github', 'https://github.com/fredwillmore/billboard-react', target: :blank %>
+          </div>
+          <div class="alert alert-warning" role="alert">
+            <div>Recent Commits:</div>
+
+            <% @git_history[:billboardreact].each do |commit| %>
+              <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                  let linkId = 'tooltip-link-<%= commit['oid'] %>'
+                  let contentId = 'tooltip-content-<%= commit['oid'] %>'
+                  // Initialize the tooltip with the content from the hidden div
+                  new bootstrap.Tooltip(
+                    document.getElementById(linkId),
+                    {
+                      title: document.getElementById(contentId).innerHTML,
+                      html: true,
+                      placement: 'auto' // You can adjust the placement as needed
+                    }
+                  );
+                });
+              </script>
+
+              <!-- Hidden div with the tooltip content -->
+              <div id="tooltip-content-<%= commit['oid'] %>" style="display:none;">
+                <div>additions: <%= commit['additions'] %></div>
+                <div>deletions: <%= commit['deletions'] %></div>
+                <div>changedFiles: <%= commit['changedFiles'] %></div>
+              </div>
+
+              <!-- Element that triggers the tooltip -->
+              <div><%= link_to commit['message'], commit['url'], target: :blank, id: "tooltip-link-#{ commit['oid'] }", dataBsToggle: "tooltip" %></div>
+            <% end %>
+          </div>
+
+          <div class="alert alert-danger" role="alert">
+            <div>Issues/Todos:</div>
+            <% @git_issues[:billboardreact].each do |issue| %>
+              <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                  let linkId = 'tooltip-link-<%= issue['id'] %>'
+                  let contentId = 'tooltip-content-<%= issue['id'] %>'
+                  // Initialize the tooltip with the content from the hidden div
+                  new bootstrap.Tooltip(
+                    document.getElementById(linkId),
+                    {
+                      title: document.getElementById(contentId).innerHTML,
+                      html: true,
+                      placement: 'auto' // You can adjust the placement as needed
+                    }
+                  );
+                });
+              </script>
+
+              <!-- Hidden div with the tooltip content -->
+              <div id="tooltip-content-<%= issue['id'] %>" style="display:none;">
+                <%= issue['bodyText'] %>
+              </div>
+
+              <!-- Element that triggers the tooltip -->
+              <div><%= link_to issue['title'], issue['url'], target: :blank, id: "tooltip-link-#{ issue['id'] }", dataBsToggle: "tooltip" %></div>
             <% end %>
           </div>
         </div>
