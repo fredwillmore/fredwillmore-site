@@ -2,110 +2,111 @@ require 'net/http'
 
 class HomeController < ApplicationController
   def index
-    @git_issues = git_issues
-    @git_history = git_history
+    @view_info = view_info
   end
 
   private
 
+  def view_info
+    git_repositories.map do |key, title|
+      git_info = git_api_response.dig('data', key)
+      { 
+        title: title,
+        collapse_id: "collapse#{ git_info['name'].titleize.remove(' ') }",
+        git_info: git_info, # I don't think I need this
+        project_url: git_info['homepageUrl'],
+        git_url: git_info['url'],
+        readme: git_info['readme']['text'],
+        commits: git_info['commits']['history']['nodes'],
+        issues: git_info['issues']['nodes'],
+      }
+    end
+  end
+
+  def git_repositories
+    {
+      'climatecontrol' => "Climate Control",
+      'billboardreact' => "Billboard Charts",
+      'datatablesdemo' => "Datatables Demo"
+    }
+  end
+
   def git_api_token
-    ENV['GIT_API_TOKEN']    
+    ENV['GIT_API_TOKEN']
   end
 
-  def git_issues_url
+  def git_api_url
     "https://api.github.com/graphql"
-  end
-
-  def git_issues
-    {
-      climatecontrol: git_api_response.dig('data', 'climatecontrol', 'issues', 'nodes') || [],
-      billboardreact: git_api_response.dig('data', 'billboardreact', 'issues', 'nodes') || []
-    }
-  end
-
-  def git_history
-    {
-      climatecontrol: git_api_response.dig('data', 'climatecontrol', 'commits', 'history', 'nodes') || [],
-      billboardreact: git_api_response.dig('data', 'billboardreact', 'commits', 'history', 'nodes') || []
-    }
   end
 
   def git_api_response
     return @git_api_response if @git_api_response
 
-    owner = "fredwillmore"
-    name = "climate-control"
-
-    query = <<-GRAPHQL
-      {
-        climatecontrol: repository(owner: "#{owner}", name: "climate-control") {
-          issues(first: 10) {
-            nodes {
-              id
-              title
-              bodyText
-              url
-            }
-          }
-          commits: object(expression: "master") {
-            ... on Commit {
-              history(first: 10) {
-                nodes {
-                  message
-                  additions
-                  deletions
-                  changedFiles
-                  url
-                  oid
-                }
-              }
-            }
-          }
-        }
-        billboardreact: repository(owner: "#{owner}", name: "billboard-react") {
-          issues(first: 10) {
-            nodes {
-              id
-              title
-              bodyText
-              url
-            }
-          }
-          commits: object(expression: "main") {
-            ... on Commit {
-              history(first: 10) {
-                nodes {
-                  message
-                  additions
-                  deletions
-                  changedFiles
-                  url
-                  oid
-                }
-              }
-            }
-          }
-        }
-      }
-    GRAPHQL
-
-    uri = URI(git_issues_url)
+    uri = URI(git_api_url)
     request = Net::HTTP::Post.new(uri)
     request["Authorization"] = "Bearer #{git_api_token}"
     request.content_type = "application/json"
 
-    request.body = JSON.dump({ query: query })
+    request.body = JSON.dump({ query: compose_graphql_query })
 
     response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
       http.request(request)
     end
-
     if response.is_a?(Net::HTTPSuccess)
       @git_api_response = JSON::parse(response.body)
     else
       raise StandardError.new "HTTP request failed with status code #{response.code}"
     end
-
     @git_api_response
+  end
+
+  private
+
+  def compose_graphql_query
+    query_components = ["climate-control", "billboard-react", "datatables-demo"].map do |repo|
+      branch = repo == "billboard-react" ? "main" : "master"
+
+      <<-GRAPHQL
+        #{repo.remove('-')}: repository(owner: "fredwillmore", name: "#{repo}") {
+          name
+          description
+          url
+          homepageUrl
+          readme: object(expression: "HEAD:README.md") {
+            ... on Blob {
+              text
+            }
+          }
+          issues(first: 10) {
+            nodes {
+              id
+              title
+              bodyText
+              url
+            }
+          }
+          commits: object(expression: "#{branch}") {
+            ... on Commit {
+              history(first: 10) {
+                nodes {
+                  message
+                  additions
+                  deletions
+                  changedFiles
+                  url
+                  oid
+                }
+              }
+            }
+          }
+        }
+      GRAPHQL
+    end.join
+
+    <<-GRAPHQL
+      {
+        #{query_components}
+      }
+    GRAPHQL
   end
 end

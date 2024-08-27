@@ -1,0 +1,84 @@
+<div class="accordion-item">
+  <div class="accordion-header collapsed" id="headingNews">
+    <button class="btn accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<%= collapse_id %>" aria-expanded="false" aria-controls="<%= collapse_id %>" >
+      <div class="project-title">
+        <%= title %>
+      </div>
+    </button>
+  </div>
+  <div id="<%= collapse_id %>" class="accordion-collapse collapse" aria-labelledby="headingNews" data-bs-parent="#projectInfo">
+    <div class="accordion-body">
+      <div class="page-subtitle">
+        Project homepage - 
+        <%= link_to "view project at #{project_url}", project_url, target: :blank %>
+      </div>
+      <div class="alert alert-info">
+        <%= Redcarpet::Markdown.new(Redcarpet::Render::HTML, extensions = {}).render(readme).html_safe %>
+      </div>
+      <div class="page-subtitle">
+        Git Info -
+        <%= link_to 'view project in Github', git_url, target: :blank %>
+      </div>
+      <div class="alert alert-warning" role="alert">
+        <div>Recent Commits:</div>
+
+        <% commits.each do |commit| %>
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              let linkId = 'tooltip-link-<%= commit['oid'] %>'
+              let contentId = 'tooltip-content-<%= commit['oid'] %>'
+              // Initialize the tooltip with the content from the hidden div
+              new bootstrap.Tooltip(
+                document.getElementById(linkId),
+                {
+                  title: document.getElementById(contentId).innerHTML,
+                  html: true,
+                  placement: 'auto' // You can adjust the placement as needed
+                }
+              );
+            });
+          </script>
+
+          <!-- Hidden div with the tooltip content -->
+          <div id="tooltip-content-<%= commit['oid'] %>" style="display:none;">
+            <div>additions: <%= commit['additions'] %></div>
+            <div>deletions: <%= commit['deletions'] %></div>
+            <div>changedFiles: <%= commit['changedFiles'] %></div>
+          </div>
+
+          <!-- Element that triggers the tooltip -->
+          <div><%= link_to commit['message'], commit['url'], target: :blank, id: "tooltip-link-#{ commit['oid'] }", dataBsToggle: "tooltip" %></div>
+        <% end %>
+      </div>
+
+      <div class="alert alert-danger" role="alert">
+        <div>Issues/Todos:</div>
+        <% issues.each do |issue| %>
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              let linkId = 'tooltip-link-<%= issue['id'] %>'
+              let contentId = 'tooltip-content-<%= issue['id'] %>'
+              // Initialize the tooltip with the content from the hidden div
+              new bootstrap.Tooltip(
+                document.getElementById(linkId),
+                {
+                  title: document.getElementById(contentId).innerHTML,
+                  html: true,
+                  placement: 'auto' // You can adjust the placement as needed
+                }
+              );
+            });
+          </script>
+
+          <!-- Hidden div with the tooltip content -->
+          <div id="tooltip-content-<%= issue['id'] %>" style="display:none;">
+            <%= issue['bodyText'] %>
+          </div>
+
+          <!-- Element that triggers the tooltip -->
+          <div><%= link_to issue['title'], issue['url'], target: :blank, id: "tooltip-link-#{ issue['id'] }", dataBsToggle: "tooltip" %></div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

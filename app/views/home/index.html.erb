@@ -1,179 +1,188 @@
 <div class="container">
   <div class="row">
-    <div class="col-12 mt-3">
-      Hello and welcome to fredwillmore.com. I am using this site to augment my resume with links to personal projects created with Ruby on Rails!
+    <div class="col-12 mt-3 page-title">
+      Fred Willmore
     </div>
   </div>
   <div class="row">
-    <div class="col-6">
-      <div class="card">
-        <div class="card-header card-title">
-          Climate Control
-            -
-          <%= link_to 'view project', 'https://climate-control.fredwillmore.com', target: :blank %>
+    <div class="col-12 page-subtitle">
+      Links:
+    </div>
+  </div>
+  <div class="links">
+    <div class="row">
+      <div class="col-12">
+        <%= link_to "Linked In", "https://www.linkedin.com/in/fred-willmore/", target: :blank %>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <%= link_to "GitHub", "https://github.com/fredwillmore", target: :blank %>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <%= link_to "StackOverflow", "http://stackoverflow.com/users/2865270/fred-willmore", target: :blank %>
+      </div>
+    </div>
+  </div>
+  <div class="skills">
+    <div class="row">
+      <div class="col-12 page-subtitle">
+        Skills:
+      </div>
+    </div>
+    <div class="skills-list">
+      <div class="row">
+        <div class="col-2 skill-type">
+          Back End:
         </div>
-        <div class="card-body">
-          <div class="alert alert-info">
-            <p>
-              This project makes use of playlist data I gathered while DJing at the
-              <%= link_to "Basement Pub", 'https://www.instagram.com/basementpub/?hl=en ', target: :blank %>
-              in Portland, OR back in 2003.
-            </p>
-            <p>
-              I have used Rails 7 with Hotwire/Stimulus to provide an interface for exploring the data, along with supplemental data from Spotify and other remote APIs.
-              The matching with Spotify track and artist data is not perfect, but you get the idea.
-            </p>
-          </div>
-          <div class="card-subtitle">
-            Git Info
-            -
-            <%= link_to 'view project in Github', 'https://github.com/fredwillmore/climate-control', target: :blank %>
-          </div>
-          <div class="alert alert-warning" role="alert">
-            <div>Recent Commits:</div>
-
-            <% @git_history[:climatecontrol].each do |commit| %>
-              <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                  let linkId = 'tooltip-link-<%= commit['oid'] %>'
-                  let contentId = 'tooltip-content-<%= commit['oid'] %>'
-                  // Initialize the tooltip with the content from the hidden div
-                  new bootstrap.Tooltip(
-                    document.getElementById(linkId),
-                    {
-                      title: document.getElementById(contentId).innerHTML,
-                      html: true,
-                      placement: 'auto' // You can adjust the placement as needed
-                    }
-                  );
-                });
-              </script>
-
-              <!-- Hidden div with the tooltip content -->
-              <div id="tooltip-content-<%= commit['oid'] %>" style="display:none;">
-                <div>additions: <%= commit['additions'] %></div>
-                <div>deletions: <%= commit['deletions'] %></div>
-                <div>changedFiles: <%= commit['changedFiles'] %></div>
-              </div>
-
-              <!-- Element that triggers the tooltip -->
-              <div><%= link_to commit['message'], commit['url'], target: :blank, id: "tooltip-link-#{ commit['oid'] }", dataBsToggle: "tooltip" %></div>
-            <% end %>
-          </div>
-
-          <div class="alert alert-danger" role="alert">
-            <div>Issues/Todos:</div>
-            <% @git_issues[:climatecontrol].each do |issue| %>
-              <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                  let linkId = 'tooltip-link-<%= issue['id'] %>'
-                  let contentId = 'tooltip-content-<%= issue['id'] %>'
-                  // Initialize the tooltip with the content from the hidden div
-                  new bootstrap.Tooltip(
-                    document.getElementById(linkId),
-                    {
-                      title: document.getElementById(contentId).innerHTML,
-                      html: true,
-                      placement: 'auto' // You can adjust the placement as needed
-                    }
-                  );
-                });
-              </script>
-
-              <!-- Hidden div with the tooltip content -->
-              <div id="tooltip-content-<%= issue['id'] %>" style="display:none;">
-                <%= issue['bodyText'] %>
-              </div>
-
-              <!-- Element that triggers the tooltip -->
-              <div><%= link_to issue['title'], issue['url'], target: :blank, id: "tooltip-link-#{ issue['id'] }", dataBsToggle: "tooltip" %></div>
+        <div class="col-10">
+          Ruby on Rails, PHP, Python
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2 skill-type">
+          Javascript:
+        </div>
+        <div class="col-10">
+          jQuery, Vue.js, ReactJS
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2 skill-type">
+          Database:
+        </div>
+        <div class="col-10">
+          PostgreSQL, MySQL
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2 skill-type">
+          Testing:
+        </div>
+        <div class="col-10">
+          RSpec, phpUnit
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2 skill-type">
+          DevOps:
+        </div>
+        <div class="col-10">
+          Docker, Kubernetes, AWS Services
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 page-subtitle">
+      Example Projects:
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="accordion" id="projectInfo">
+          <div class="accordion-item">
+            <% @view_info.each do |view_info| %>
+              <%= render partial: "project_accordion_item", locals: view_info %>
             <% end %>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-6">
-      <div class="card">
-        <div class="card-header card-title">
-          Billboard Charts
-            -
-          <%= link_to 'view project', 'https://billboard-react.fredwillmore.com', target: :blank %>
+  </div>
+  <div class="experience">
+    <div class="row">
+      <div class="col-12 page-subtitle">
+        Work Experience:
+      </div>
+    </div>
+
+    <div class="job">
+      <div class="row">
+        <div class="col-6 company">
+          Bamboo Health								
         </div>
-        <div class="card-body">
-          <div class="alert alert-info">
-            <p>
-              This project uses Billboard Magazine top 100 data for the years from 1955-2015. Sadly, this data is no longer made available by Billboard, so updates for later years are unlikely.              
-            </p>
-            <p>
-              I used ReactJS with the D3 visualization library.
-            </p>
-          </div>
-          <div class="card-subtitle">
-            Git Info
-            -
-            <%= link_to 'view project in Github', 'https://github.com/fredwillmore/billboard-react', target: :blank %>
-          </div>
-          <div class="alert alert-warning" role="alert">
-            <div>Recent Commits:</div>
-
-            <% @git_history[:billboardreact].each do |commit| %>
-              <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                  let linkId = 'tooltip-link-<%= commit['oid'] %>'
-                  let contentId = 'tooltip-content-<%= commit['oid'] %>'
-                  // Initialize the tooltip with the content from the hidden div
-                  new bootstrap.Tooltip(
-                    document.getElementById(linkId),
-                    {
-                      title: document.getElementById(contentId).innerHTML,
-                      html: true,
-                      placement: 'auto' // You can adjust the placement as needed
-                    }
-                  );
-                });
-              </script>
-
-              <!-- Hidden div with the tooltip content -->
-              <div id="tooltip-content-<%= commit['oid'] %>" style="display:none;">
-                <div>additions: <%= commit['additions'] %></div>
-                <div>deletions: <%= commit['deletions'] %></div>
-                <div>changedFiles: <%= commit['changedFiles'] %></div>
-              </div>
-
-              <!-- Element that triggers the tooltip -->
-              <div><%= link_to commit['message'], commit['url'], target: :blank, id: "tooltip-link-#{ commit['oid'] }", dataBsToggle: "tooltip" %></div>
-            <% end %>
-          </div>
-
-          <div class="alert alert-danger" role="alert">
-            <div>Issues/Todos:</div>
-            <% @git_issues[:billboardreact].each do |issue| %>
-              <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                  let linkId = 'tooltip-link-<%= issue['id'] %>'
-                  let contentId = 'tooltip-content-<%= issue['id'] %>'
-                  // Initialize the tooltip with the content from the hidden div
-                  new bootstrap.Tooltip(
-                    document.getElementById(linkId),
-                    {
-                      title: document.getElementById(contentId).innerHTML,
-                      html: true,
-                      placement: 'auto' // You can adjust the placement as needed
-                    }
-                  );
-                });
-              </script>
-
-              <!-- Hidden div with the tooltip content -->
-              <div id="tooltip-content-<%= issue['id'] %>" style="display:none;">
-                <%= issue['bodyText'] %>
-              </div>
-
-              <!-- Element that triggers the tooltip -->
-              <div><%= link_to issue['title'], issue['url'], target: :blank, id: "tooltip-link-#{ issue['id'] }", dataBsToggle: "tooltip" %></div>
-            <% end %>
-          </div>
+        <div class="col-6 dates">
+          May 2022 - June 2024
         </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mt-3 job-title">
+          Senior Software Engineer
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mt-3 description">
+          At Bamboo Health I contributed to <%= link_to "PMP AwaRxe", "https://bamboohealth.com/solutions/pmp-awarxe", { target: :blank, class: "work-project" } %>, a prescription drug monitoring application in Rails, and <%= link_to "OpenBeds", "https://bamboohealth.com/solutions/openbeds", { target: :blank, class: "work-project" } %>, a capacity and referral management system built in PHP with Laravel. I was focused on refactoring away technical debt, increasing test coverage, and new feature development using AWS EventBridge, CloudSearch, and Lambda to implement a service oriented, event driven application architecture.
+        </div>
+      </div>
+    </div>
+
+    <div class="job">
+      <div class="row">
+        <div class="col-6 company">
+          Novillus
+        </div>
+        <div class="col-6 dates">
+          January 2019 – May 2022
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mt-3 job-title">
+          Ruby on Rails Developer
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mt-3 description">
+          I contributed to the following Novillus products:
+          <ul>
+            <li><%= link_to "CGMA", "https://www.novillus.com/solutions/#care-gap-management", { target: :blank, class: "work-project" } %> - Led a project to extract core logic into a Rails engine for scalability, increased test coverage by 20 percent, upgraded application stack from Rails 4.2/Ruby 2.3 to Rails 6.1/Ruby 2.7</li>
+            <li><span class="work-project">Nexus (decommissioned)</span>  - Encapsulated business logic and workflows into state machines, built out test suite, increased test coverage by 10 percent</li>
+            <li><%= link_to "Calculus", "https://www.novillus.com/solutions/#calculus", { target: :blank, class: "work-project" } %> - Feature and test development</li>
+            <li><%= link_to "Clean", "https://www.novillus.com/solutions/#clean", { target: :blank, class: "work-project" } %> - UI and functionality updates</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="job">
+      <div class="row">
+        <div class="col-6 company">
+          PFSC (acquired by Vervent)
+        </div>
+        <div class="col-6 dates">
+          June 2014 – February 2017
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mt-3 job-title">
+          Ruby on Rails Developer
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 description">
+          I was hired to upgrade a mature Rails app to the latest Rails and Ruby versions, as well as develop new features and integrate with third party loan servicing packages.
+          Milestones include:
+          <ul>
+            <li>Upgraded application stack from Rails 2.1/Ruby 1.8.7 to Rails 4.2/Ruby 2.2.</li>
+            <li>Upgraded JavaScript library from prototype.js to jQuery.js.</li>
+            <li>Migrated test suite from Test::Unit to RSpec.</li>
+            <li>Used Bootstrap styles to implement a responsive layout.</li>
+            <li>Refactored and unified presentation of table data using presenters and serializers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="experience">
+    <div class="row">
+      <div class="col-12 page-subtitle">
+        Education:
+      </div>
+    </div>
+    <div class="row highlight-box">
+      <div class="col-12 mt-3 job-title">
+        Portland State University
+      </div>
+      <div class="col-12 description">
+        Bachelor of Science in Mathematics with additional coursework in Computer Science
       </div>
     </div>
   </div>
