@@ -27,7 +27,8 @@ class HomeController < ApplicationController
     {
       'climatecontrol' => "Climate Control",
       'billboardreact' => "Billboard Charts",
-      'datatablesdemo' => "Datatables Demo"
+      'datatablesdemo' => "Datatables Demo",
+      'primesrails' => "Prime Numbers",
     }
   end
 
@@ -63,8 +64,19 @@ class HomeController < ApplicationController
   private
 
   def compose_graphql_query
-    query_components = ["climate-control", "billboard-react", "datatables-demo"].map do |repo|
-      branch = repo == "billboard-react" ? "main" : "master"
+    query_components = [
+      "climate-control",
+      "billboard-react",
+      "datatables-demo",
+      "primes-rails",
+      "primes",
+    ].map do |repo|
+      branch = case repo
+      when "billboard-react", "primes-rails"
+        "main"
+      else
+        "master"
+      end
 
       <<-GRAPHQL
         #{repo.remove('-')}: repository(owner: "fredwillmore", name: "#{repo}") {

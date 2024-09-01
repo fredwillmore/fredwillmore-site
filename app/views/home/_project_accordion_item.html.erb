@@ -18,6 +18,9 @@
       <div class="page-subtitle">
         Git Info -
         <%= link_to 'view project in Github', git_url, target: :blank %>
+        <% if title == "Prime Numbers" %>
+          <br><%= link_to 'view original project in Github', "https://github.com/fredwillmore/primes", target: :blank %>
+        <% end %>
       </div>
       <div class="alert alert-warning" role="alert">
         <div>Recent Commits:</div>
