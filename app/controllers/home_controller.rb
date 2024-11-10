@@ -29,6 +29,7 @@ class HomeController < ApplicationController
       'billboardreact' => "Billboard Charts",
       'datatablesdemo' => "Datatables Demo",
       'primesrails' => "Prime Numbers",
+      'congressionaldisclosures' => "Congressional Disclosures",
     }
   end
 
@@ -70,9 +71,10 @@ class HomeController < ApplicationController
       "datatables-demo",
       "primes-rails",
       "primes",
+      "congressional-disclosures",
     ].map do |repo|
       branch = case repo
-      when "billboard-react", "primes-rails"
+      when "billboard-react", "primes-rails", "congressional-disclosures"
         "main"
       else
         "master"
